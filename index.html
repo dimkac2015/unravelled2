@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unravelled — see your playlist differently</title>
+<meta name="description" content="Paste a Spotify playlist link and unravel it into a scenery, an era, a character and a movie.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23e8dcC8'/%3E%3Cpath d='M6 16c4-6 8 4 12-2 3-4 6 2 8-1' stroke='%232e5d43' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div id="thread-line" aria-hidden="true"></div>
+
+<div id="yarn-ball" aria-hidden="true">
+  <svg viewBox="0 0 120 120" id="yarn-svg">
+    <defs>
+      <clipPath id="ball-clip"><circle cx="60" cy="60" r="46"/></clipPath>
+    </defs>
+    <circle cx="60" cy="60" r="46" fill="#e8dcc8"/>
+    <g clip-path="url(#ball-clip)" stroke="#2e5d43" stroke-width="4.5" fill="none" stroke-linecap="round">
+      <path d="M14 60 C 34 30, 86 30, 106 60"/>
+      <path d="M14 60 C 34 90, 86 90, 106 60"/>
+      <path d="M22 38 C 52 66, 68 54, 98 82"/>
+      <path d="M22 82 C 52 54, 68 66, 98 38"/>
+      <path d="M60 14 C 30 34, 30 86, 60 106"/>
+      <path d="M40 20 C 70 44, 50 76, 80 100"/>
+    </g>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#1d3f2c" stroke-width="3"/>
+  </svg>
+</div>
+
+<main id="app">
+
+  <!-- FRONT PAGE -->
+  <section class="page" id="page-home">
+    <header class="site-header">
+      <h1 class="site-title">Unravelled</h1>
+      <p class="tagline">paste a playlist. pull the thread.</p>
+    </header>
+
+    <div class="paste-frame">
+      <label for="playlist-input" class="frame-label">your spotify playlist link</label>
+      <input id="playlist-input" type="url" placeholder="https://open.spotify.com/playlist/…"
+             autocomplete="off" spellcheck="false">
+      <p class="input-error" id="input-error" hidden></p>
+      <button id="unravel-btn" class="unravel-btn">
+        <span class="btn-thread" aria-hidden="true"></span>
+        unravel
+      </button>
+      <p id="status-msg" class="status-msg" hidden></p>
+    </div>
+
+    <div class="home-foot">
+      <button class="linklike" id="settings-toggle">spotify &amp; genius keys</button>
+      <button class="linklike" id="demo-toggle">try a demo playlist</button>
+    </div>
+
+    <div class="settings" id="settings-panel" hidden>
+      <p class="settings-note">
+        Unravelled runs entirely in your browser. To read real Spotify playlists,
+        paste a Client ID and Client Secret from your own
+        <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify app</a>.
+        Optionally add a Genius API token to pull a real lyric quote.
+        Keys are stored only in your browser (localStorage).
+      </p>
+      <div class="settings-row">
+        <label>Spotify Client ID<input id="sp-client-id" type="text" autocomplete="off"></label>
+        <label>Spotify Client Secret<input id="sp-client-secret" type="password" autocomplete="off"></label>
+        <label>Genius token (optional)<input id="genius-token" type="password" autocomplete="off"></label>
+      </div>
+      <button id="settings-save" class="small-btn">save keys</button>
+      <span id="settings-saved" class="saved-note" hidden>saved ✓</span>
+    </div>
+
+    <div class="demo-list" id="demo-list" hidden>
+      <p class="settings-note">No keys? Unravel a demo playlist:</p>
+      <div class="demo-buttons">
+        <button class="small-btn demo-btn" data-demo="storm">“Thunder in the Cathedral” — dark &amp; heavy</button>
+        <button class="small-btn demo-btn" data-demo="summer">“Sunburnt Cassette” — sunny &amp; nostalgic</button>
+        <button class="small-btn demo-btn" data-demo="lush">“Moss &amp; Bramble” — lush &amp; slow</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENERY PAGE -->
+  <section class="page" id="page-scenery" hidden>
+    <div class="scene-stage" id="scene-stage"></div>
+    <div class="page-body" id="scenery-body"></div>
+  </section>
+
+  <!-- ERA PAGE -->
+  <section class="page" id="page-era" hidden>
+    <div class="page-body era-body" id="era-body"></div>
+  </section>
+
+  <!-- CHARACTER PAGE -->
+  <section class="page" id="page-character" hidden>
+    <div class="page-body char-body" id="character-body"></div>
+  </section>
+
+  <!-- MOVIE PAGE -->
+  <section class="page" id="page-movie" hidden>
+    <div class="page-body movie-body" id="movie-body"></div>
+  </section>
+
+  <!-- FINALE -->
+  <section class="page" id="page-end" hidden>
+    <div class="page-body end-body" id="end-body"></div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Unravelled — a playlist, unspooled. Not affiliated with Spotify.</p>
+</footer>
+
+<script src="js/demo-data.js"></script>
+<script src="js/scenes.js"></script>
+<script src="js/portraits.js"></script>
+<script src="js/cats.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
