@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Unravelled — gallery</title>
 <style>
-  body { background: #0b3d2e; color: #f4f1e8; font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; padding: 16px; }
+  body { background: #0b2118; color: #f4f1e8; font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; padding: 16px; }
   h1 { font-family: Georgia, serif; font-weight: 400; }
   .bar { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 12px 0 20px; }
-  select, input { min-height: 40px; border-radius: 10px; border: 1px solid #f4f1e855; background: #072a20; color: #f4f1e8; padding: 6px 10px; }
+  select, input { min-height: 40px; border-radius: 10px; border: 1px solid rgba(244,241,232,0.3); background: #0e2a1e; color: #f4f1e8; padding: 6px 10px; }
   h2 { font-family: Georgia, serif; font-weight: 400; margin: 26px 0 10px; font-size: 20px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-  .cell { background: #072a20; border-radius: 12px; overflow: hidden; border: 1px solid #f4f1e822; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .cell { background: #0e2a1e; border-radius: 12px; overflow: hidden; border: 1px solid rgba(244,241,232,0.13); }
   .cell svg { width: 100%; height: auto; display: block; }
-  .cell .cap { font-size: 11px; color: #a9c8b8; padding: 6px 8px; }
+  .cell .cap { font-size: 11px; color: #93b3a2; padding: 6px 8px; }
 </style>
 </head>
 <body>
@@ -45,29 +45,28 @@
   L.TIMES.forEach(x => time.add(new Option(x, x, x === 'golden')));
   L.WEATHERS.forEach(x => weather.add(new Option(x, x, x === 'clear')));
   const SAMPLE_CHARS = [
-    { name: 'detective', species: 'human', animal_type: null, body: 'average', skin: 'olive', head: 'square_jaw', hair: 'short_side_part', hair_color: 'ink', facial_hair: 'stubble', headwear: 'fedora', outfit: 'trench_coat', outfit_color: 'shadow', accessory: 'none', prop: 'magnifier', pose: 'leaning_wall', expression: 'determined', background: 'streetlamp_night' },
-    { name: 'songstress', species: 'human', animal_type: null, body: 'slim', skin: 'fair', head: 'heart', hair: 'long_wavy', hair_color: 'accent', facial_hair: 'none', headwear: 'none', outfit: 'dress', outfit_color: 'mid', accessory: 'necklace', prop: 'microphone', pose: 'standing_front', expression: 'dreamy', background: 'spotlight' },
-    { name: 'robot', species: 'robot', animal_type: null, body: 'stocky', skin: 'dark', head: 'wide', hair: 'bald', hair_color: 'ink', facial_hair: 'none', headwear: 'none', outfit: 'armor', outfit_color: 'base', accessory: 'goggles', prop: 'none', pose: 'arms_crossed', expression: 'neutral', background: 'smoke_haze' },
-    { name: 'fox', species: 'animal', animal_type: 'fox', body: 'slim', skin: 'tan', head: 'long', hair: 'wild_spiky', hair_color: 'accent', facial_hair: 'none', headwear: 'none', outfit: 'cloak', outfit_color: 'base', accessory: 'none', prop: 'book', pose: 'sitting', expression: 'smirk', background: 'venetian_blinds' },
-    { name: 'knight', species: 'human', animal_type: null, body: 'tall', skin: 'tan', head: 'square_jaw', hair: 'buzz', hair_color: 'ink', facial_hair: 'full_beard', headwear: 'helmet', outfit: 'armor', outfit_color: 'mid', accessory: 'none', prop: 'sword', pose: 'standing_front', expression: 'angry', background: 'doorway_light' },
-    { name: 'witch', species: 'human', animal_type: null, body: 'slim', skin: 'fair', head: 'oval', hair: 'long_straight', hair_color: 'ink', facial_hair: 'none', headwear: 'witch_hat', outfit: 'robe', outfit_color: 'shadow', accessory: 'earring', prop: 'broom', pose: 'three_quarter', expression: 'smirk', background: 'rainy_window' },
-    { name: 'sailor', species: 'human', animal_type: null, body: 'stocky', skin: 'brown', head: 'round', hair: 'curly', hair_color: 'ink', facial_hair: 'mustache', headwear: 'cap', outfit: 'overalls', outfit_color: 'base', accessory: 'scarf', prop: 'lantern', pose: 'hand_in_pocket', expression: 'tired', background: 'brick_wall' },
-    { name: 'alien', species: 'robot', animal_type: null, body: 'small', skin: 'dark', head: 'long', hair: 'bald', hair_color: 'accent', facial_hair: 'none', headwear: 'none', outfit: 'space_suit', outfit_color: 'light', accessory: 'goggles', prop: 'telescope', pose: 'looking_up', expression: 'surprised', background: 'curtain' },
-    { name: 'dancer', species: 'human', animal_type: null, body: 'slim', skin: 'dark', head: 'oval', hair: 'afro', hair_color: 'ink', facial_hair: 'none', headwear: 'headband', outfit: 'hoodie', outfit_color: 'accent', accessory: 'none', prop: 'none', pose: 'walking', expression: 'smirk', background: 'spotlight' },
-    { name: 'professor', species: 'human', animal_type: null, body: 'average', skin: 'light', head: 'round', hair: 'bald', hair_color: 'ink', facial_hair: 'goatee', headwear: 'none', outfit: 'lab_coat', outfit_color: 'light', accessory: 'glasses', prop: 'book', pose: 'arms_crossed', expression: 'neutral', background: 'venetian_blinds' },
-    { name: 'cowboy', species: 'human', animal_type: null, body: 'tall', skin: 'tan', head: 'wide', hair: 'slick_back', hair_color: 'mid', facial_hair: 'sideburns', headwear: 'cowboy_hat', outfit: 'military_jacket', outfit_color: 'base', accessory: 'tie', prop: 'umbrella', pose: 'leaning_wall', expression: 'neutral', background: 'doorway_light' },
-    { name: 'cat', species: 'animal', animal_type: 'cat', body: 'small', skin: 'dark', head: 'round', hair: 'buzz', hair_color: 'ink', facial_hair: 'none', headwear: 'feather_hat', outfit: 'poncho', outfit_color: 'accent', accessory: 'none', prop: 'flower', pose: 'sitting', expression: 'dreamy', background: 'curtain' }
+    { species: 'human', animal_type: null, body: 'average', skin: 'olive', hair: 'short_side_part', hair_color: 'ink', headwear: 'fedora', outfit_color: 'shadow', accessory: 'glasses', background: 'streetlamp_night', pose: 'leaning_wall' },
+    { species: 'human', animal_type: null, body: 'slim', skin: 'fair', hair: 'long_wavy', hair_color: 'accent', headwear: 'none', outfit_color: 'mid', accessory: 'necklace', background: 'spotlight', pose: 'standing_front' },
+    { species: 'human', animal_type: null, body: 'stocky', skin: 'tan', hair: 'buzz', hair_color: 'ink', headwear: 'helmet', outfit_color: 'base', accessory: 'goggles', background: 'smoke_haze', pose: 'arms_crossed' },
+    { species: 'animal', animal_type: 'fox', body: 'slim', skin: 'tan', hair: 'wild_spiky', hair_color: 'accent', headwear: 'none', outfit_color: 'base', accessory: 'none', background: 'venetian_blinds', pose: 'sitting' },
+    { species: 'human', animal_type: null, body: 'tall', skin: 'tan', hair: 'buzz', hair_color: 'ink', headwear: 'crown', outfit_color: 'mid', accessory: 'none', background: 'doorway_light', pose: 'standing_front' },
+    { species: 'human', animal_type: null, body: 'slim', skin: 'fair', hair: 'long_straight', hair_color: 'ink', headwear: 'witch_hat', outfit_color: 'shadow', accessory: 'earring', background: 'rainy_window', pose: 'three_quarter' },
+    { species: 'human', animal_type: null, body: 'stocky', skin: 'brown', hair: 'curly', hair_color: 'ink', headwear: 'cap', outfit_color: 'base', accessory: 'scarf', background: 'brick_wall', pose: 'hand_in_pocket' },
+    { species: 'human', animal_type: null, body: 'small', skin: 'dark', hair: 'bald', hair_color: 'accent', headwear: 'none', outfit_color: 'light', accessory: 'goggles', background: 'curtain', pose: 'looking_up' },
+    { species: 'human', animal_type: null, body: 'slim', skin: 'dark', hair: 'afro', hair_color: 'ink', headwear: 'headband', outfit_color: 'accent', accessory: 'none', background: 'spotlight', pose: 'walking' },
+    { species: 'human', animal_type: null, body: 'average', skin: 'light', hair: 'bald', hair_color: 'ink', headwear: 'none', outfit_color: 'light', accessory: 'glasses', background: 'venetian_blinds', pose: 'arms_crossed' },
+    { species: 'human', animal_type: null, body: 'tall', skin: 'tan', hair: 'slick_back', hair_color: 'mid', headwear: 'cowboy_hat', outfit_color: 'base', accessory: 'tie', background: 'doorway_light', pose: 'leaning_wall' },
+    { species: 'animal', animal_type: 'cat', body: 'small', skin: 'dark', hair: 'buzz', hair_color: 'ink', headwear: 'feather_hat', outfit_color: 'accent', accessory: 'none', background: 'curtain', pose: 'sitting' }
   ];
-  function cell(svg, cap) { return `<div class="cell">${svg}<div class="cap">${cap}</div></div>`; }
+  const cell = (svg, cap) => `<div class="cell">${svg}<div class="cap">${cap}</div></div>`;
   function render() {
     const p = pal.value, sd = seed.value, tm = time.value, wt = weather.value;
-    let html = '';
-    html += '<h2>Scenes × 3 seeds</h2><div class="grid">';
+    let html = '<h2>Scenes × 3 seeds</h2><div class="grid">';
     for (const s of L.SCENES) for (let k = 0; k < 3; k++) html += cell(A.scenes[s](sd + ':' + s + ':' + k, p, tm, wt), s + ' #' + k);
-    html += '</div><h2>Icons × backdrops (first backdrop set)</h2><div class="grid">';
+    html += '</div><h2>Icons × backdrops</h2><div class="grid">';
     for (const ic of L.ICONS) for (let k = 0; k < 3; k++) html += cell(A.icons.render(ic, L.BACKDROPS[k % L.BACKDROPS.length], sd + ':' + ic + ':' + k, p), ic + ' / ' + L.BACKDROPS[k % L.BACKDROPS.length]);
     html += '</div><h2>Sample characters</h2><div class="grid">';
-    for (const c of SAMPLE_CHARS) html += cell(A.figures.render(c, sd + ':char:' + c.name, p, c.background), c.name);
+    for (const c of SAMPLE_CHARS) html += cell(A.figures.render(c, sd + ':char:' + c.animal_type + ':' + c.headwear, p), (c.animal_type || c.species) + ' / ' + c.headwear);
     html += '</div><h2>Poster compositions</h2><div class="grid">';
     for (const c of L.COMPOSITIONS) html += cell(A.posters.render({ composition: c, time_of_day: tm, elements: L.ELEMENTS.slice(0, 3) }, sd + ':comp:' + c, p, tm), c);
     html += '</div><h2>Activities</h2><div class="grid">';
@@ -75,7 +74,7 @@
     html += '</div><h2>Cats</h2><div class="grid">';
     for (const c of A.cats.ORDER) html += cell(A.cats.render(c), c);
     html += '</div>';
-    out.innerHTML = A.ambientStyles() + html;
+    out.innerHTML = html;
   }
   [pal, seed, time, weather].forEach(el => el.addEventListener('input', render));
   render();

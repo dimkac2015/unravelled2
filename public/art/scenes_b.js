@@ -1,170 +1,136 @@
-/* Unravelled — scenes part B (remaining 11 of 24 SCENES). */
+/* Unravelled — scenes part B (11 of 24), demo-style. */
 (function () {
-  const A = window.ART, K = A.kit, W = K.W, H = K.H;
-  const base = K.base, tints = K.tints, treeLine = K.treeLine, birds = K.birds, finishScene = K.finishScene;
+  const A = window.ART, F = A.F;
+  const reg = (id, fn) => { window.ART.scenes[id] = (seed, pal, time, weather) => A.scene(seed + ':' + id, pal, time, weather, fn); };
 
-  const scenes = {
-    thunderstorm(seed, pal, time, weather) {
-      const c = base(seed, pal, 'night', 'storm'), t = tints(c);
-      c.d.add(A.starField(c.d, c.rng, W, H * 0.4, 20, c.P.light, 1.2));
-      for (let i = 0; i < 7; i++) c.d.add(A.cloud(c, c.rng, c.rng.range(0, W), c.rng.range(H * 0.04, H * 0.26), c.rng.range(1.4, 2.4), c.P.shadow, 0.9));
-      const hz = H * 0.68;
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz - 40, W + 20, hz - 90, 50, 5), hz, H, t.near, 1));
-      c.d.add(treeLine(c, H * 0.94, 0, W, 6, t.fore, 120, 220));
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz + 120, W + 20, hz + 60, 30, 4), hz + 130, H, c.P.ink, 1));
-      return finishScene(c, 'storm', { vig: 0.55 });
-    },
-    space(seed, pal, time, weather) {
-      const c = A.sceneBase(seed, pal, 'night', weather, W, H);
-      c.d.def(`<rect width="${W}" height="${H}" fill="${c.P.ink}"/>`); c.d.add(`<rect width="${W}" height="${H}" fill="${c.P.ink}"/>`);
-      c.d.add(A.starField(c.d, c.rng, W, H, 160, c.P.light, 2.2));
-      const px = c.rng.range(W * 0.3, W * 0.7), py = c.rng.range(H * 0.3, H * 0.45), pr = c.rng.range(90, 130);
-      c.d.rgrad('pl', [[0, c.P.mid], [0.75, c.P.base], [1, c.P.shadow]], { cx: '38%', cy: '35%', r: '75%' });
-      c.d.add(`<circle cx="${A.fmt(px)}" cy="${A.fmt(py)}" r="${A.fmt(pr)}" fill="url(#${c.d.p}pl)"/>`);
-      c.d.add(`<ellipse cx="${A.fmt(px)}" cy="${A.fmt(py)}" rx="${A.fmt(pr * 1.9)}" ry="${A.fmt(pr * 0.4)}" fill="none" stroke="${c.P.accent}" stroke-width="7" opacity="0.85" transform="rotate(-18 ${A.fmt(px)} ${A.fmt(py)})"/>`);
-      for (let i = 0; i < 4; i++) c.d.add(`<circle cx="${A.fmt(c.rng.range(0, W))}" cy="${A.fmt(c.rng.range(0, H))}" r="${A.fmt(c.rng.range(6, 22))}" fill="${c.rng.pick([c.P.mid, c.P.shadow])}" opacity="0.9"/>`);
-      const sx = c.rng.range(W * 0.15, W * 0.85);
-      c.d.add(`<path d="M ${A.fmt(sx - 14)} ${A.fmt(H * 0.8)} L ${A.fmt(sx)} ${A.fmt(H * 0.66)} L ${A.fmt(sx + 14)} ${A.fmt(H * 0.8)} Z" fill="${c.P.light}"/><circle cx="${A.fmt(sx)}" cy="${A.fmt(H * 0.69)}" r="5" fill="${c.P.ink}"/><path d="M ${A.fmt(sx - 8)} ${A.fmt(H * 0.8)} L ${A.fmt(sx)} ${A.fmt(H * 0.9)} L ${A.fmt(sx + 8)} ${A.fmt(H * 0.8)} Z" fill="${c.P.accent}" class="tw"/>`);
-      A.weatherOverlay(c, weather || 'clear');
-      return A.finish(c.d, W, H, { vig: 0.35 });
-    },
-    swamp(seed, pal, time, weather) {
-      const c = base(seed, pal, weather === 'clear' ? 'dusk' : time, weather), t = tints(c);
-      const hz = H * 0.66;
-      c.d.add(`<rect y="${A.fmt(hz)}" width="${W}" height="${A.fmt(H - hz)}" fill="${A.mix(c.P.shadow, c.P.ink, 0.4)}"/>`);
-      for (let i = 0; i < 8; i++) c.d.add(`<ellipse cx="${A.fmt(c.rng.range(0, W))}" cy="${A.fmt(c.rng.range(hz + 10, H))}" rx="${A.fmt(c.rng.range(30, 90))}" ry="${A.fmt(c.rng.range(4, 10))}" fill="${c.P.base}" opacity="0.5"/>`);
-      const n = c.rng.int(7, 10);
-      for (let i = 0; i < n; i++) {
-        const x = c.rng.range(40, W - 40), hgt = c.rng.range(120, 260);
-        c.d.add(`<path d="M ${A.fmt(x)} ${A.fmt(hz)} L ${A.fmt(x + c.rng.range(-8, 8))} ${A.fmt(hz - hgt)}" stroke="${c.P.ink}" stroke-width="${A.fmt(c.rng.range(6, 10))}" fill="none"/>`);
-        for (let b = 0; b < 3; b++) c.d.add(`<path d="M ${A.fmt(x)} ${A.fmt(hz - hgt * c.rng.range(0.3, 0.9))} q ${A.fmt(c.rng.range(20, 50))} ${A.fmt(-c.rng.range(6, 20))} ${A.fmt(c.rng.range(34, 70))} ${A.fmt(c.rng.range(0, 12))}" stroke="${c.P.ink}" stroke-width="4" fill="none"/>`);
-      }
-      const lx = c.rng.range(W * 0.2, W * 0.8), ly = c.rng.range(H * 0.5, H * 0.6);
-      c.d.add(`<circle cx="${A.fmt(lx)}" cy="${A.fmt(ly)}" r="7" fill="${c.P.accent}" class="tw"/><ellipse cx="${A.fmt(lx)}" cy="${A.fmt(hz + 24)}" rx="40" ry="8" fill="${c.P.accent}" opacity="0.25"/>`);
-      c.d.add(birds(c, c.rng.int(2, 4), 80, W - 80, H * 0.1, H * 0.25, c.P.ink));
-      return finishScene(c, weather, { vig: 0.55 });
-    },
-    sea_cliffs(seed, pal, time, weather) {
-      const c = base(seed, pal, time, weather), t = tints(c);
-      const hz = H * 0.6;
-      for (let i = 0; i < 3; i++) c.d.add(`<path d="${A.wavePath(c.rng, hz + 20 + i * 70, 10 + i * 8, W, H, i * 1.7)} L ${W} ${H} L 0 ${H} Z" fill="${[t.far, t.mid, t.near][i]}"/>`);
-      const cx = W * c.rng.range(0.55, 0.8);
-      c.d.add(`<path d="M ${A.fmt(cx - 190)} ${A.fmt(hz + 10)} L ${A.fmt(cx - 120)} ${A.fmt(hz - 260)} L ${A.fmt(cx + 40)} ${A.fmt(hz - 300)} L ${A.fmt(cx + 120)} ${A.fmt(hz - 180)} L ${A.fmt(cx + 190)} ${A.fmt(hz + 10)} Z" fill="${t.mid}"/>`);
-      c.d.add(`<path d="M ${A.fmt(cx + 40)} ${A.fmt(hz - 300)} L ${A.fmt(cx + 60)} ${A.fmt(hz - 230)} L ${A.fmt(cx + 110)} ${A.fmt(hz - 170)} L ${A.fmt(cx + 40)} ${A.fmt(hz - 300)} Z" fill="${c.P.light}" opacity="0.8"/>`);
-      c.d.add(`<path d="M ${A.fmt(cx + 30)} ${A.fmt(hz + 4)} q 30 26 60 0 q -30 16 -60 0" fill="${c.P.light}" opacity="0.7"/>`);
-      c.d.add(birds(c, c.rng.int(4, 7), 60, W * 0.5, H * 0.12, H * 0.3, c.P.ink));
-      return finishScene(c, weather);
-    },
-    lighthouse(seed, pal, time, weather) {
-      const c = base(seed, pal, time, weather), t = tints(c);
-      const hz = H * 0.62;
-      for (let i = 0; i < 3; i++) c.d.add(`<path d="${A.wavePath(c.rng, hz + 16 + i * 64, 9 + i * 7, W, H, i * 2.4)} L ${W} ${H} L 0 ${H} Z" fill="${[t.far, t.mid, t.near][i]}"/>`);
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz - 30, W * 0.45, hz - 10, 20, 4), hz, H, t.mid, 1));
-      const lx = W * c.rng.range(0.62, 0.78), top = H * 0.24;
-      c.d.add(A.castShadow(`M ${A.fmt(lx - 26)} ${A.fmt(hz)} L ${A.fmt(lx + 26)} ${A.fmt(hz)} L ${A.fmt(lx + 120)} ${A.fmt(hz + 22)} L ${A.fmt(lx - 60)} ${A.fmt(hz + 22)} Z`, 95, 22, c.P.ink, 0.5));
-      c.d.add(`<path d="M ${A.fmt(lx - 26)} ${A.fmt(hz)} L ${A.fmt(lx - 14)} ${A.fmt(top)} L ${A.fmt(lx + 14)} ${A.fmt(top)} L ${A.fmt(lx + 26)} ${A.fmt(hz)} Z" fill="${c.P.light}"/>`);
-      for (let i = 0; i < 3; i++) c.d.add(`<rect x="${A.fmt(lx - 22 + i * 2)}" y="${A.fmt(hz - 40 - i * 70)}" width="${A.fmt(44 - i * 4)}" height="12" fill="${c.P.accent}" opacity="0.9"/>`);
-      c.d.add(`<rect x="${A.fmt(lx - 18)}" y="${A.fmt(top - 26)}" width="36" height="26" fill="${c.P.ink}"/><circle cx="${A.fmt(lx)}" cy="${A.fmt(top - 13)}" r="8" fill="${c.P.accent}" class="tw"/>`);
-      const ang = c.rng.range(-0.5, 0.5);
-      c.d.grad('beam', [[0, c.P.accent, 0.5], [1, c.P.accent, 0]], { x1: lx, y1: top - 13, x2: lx - 420, y2: top - 13 + 420 * Math.tan(ang), gradientUnits: 'userSpaceOnUse' });
-      c.d.add(`<path d="M ${A.fmt(lx)} ${A.fmt(top - 13)} L ${A.fmt(lx - 430)} ${A.fmt(top - 13 + 430 * Math.tan(ang) - 70)} L ${A.fmt(lx - 430)} ${A.fmt(top - 13 + 430 * Math.tan(ang) + 70)} Z" fill="url(#${c.d.p}beam)" class="drift"/>`);
-      return finishScene(c, weather);
-    },
-    canyon(seed, pal, time, weather) {
-      const c = base(seed, pal, time, weather), t = tints(c);
-      const hz = H * 0.7;
-      c.d.add(`<rect y="${A.fmt(hz - 40)}" width="${W}" height="${A.fmt(H - hz + 40)}" fill="${c.P.base}"/>`);
-      const lw = W * 0.34, lx = W * 0.12, rx = W * 0.54;
-      c.d.add(`<path d="M 0 ${A.fmt(hz - 260)} L ${A.fmt(lx)} ${A.fmt(hz - 200)} L ${A.fmt(lx + lw * 0.3)} ${A.fmt(H)} L 0 ${H} Z" fill="${t.near}"/>`);
-      c.d.add(`<path d="M ${A.fmt(rx)} ${A.fmt(hz - 160)} L ${A.fmt(W)} ${A.fmt(hz - 240)} L ${W} ${H} L ${A.fmt(rx + lw * 0.4)} ${A.fmt(H)} Z" fill="${t.mid}"/>`);
-      for (let i = 0; i < 5; i++) {
-        c.d.add(`<path d="M ${A.fmt(lx - 10)} ${A.fmt(hz - 200 + i * 90)} L ${A.fmt(lx + lw * 0.32)} ${A.fmt(hz - 180 + i * 95)}" stroke="${A.mix(c.P.mid, c.P.light, i / 5)}" stroke-width="${A.fmt(10 - i)}" opacity="0.7" fill="none"/>`);
-        c.d.add(`<path d="M ${A.fmt(W - 12)} ${A.fmt(hz - 230 + i * 95)} L ${A.fmt(rx + lw * 0.42)} ${A.fmt(hz - 200 + i * 90)}" stroke="${A.mix(c.P.shadow, c.P.base, i / 5)}" stroke-width="${A.fmt(9 - i)}" opacity="0.8" fill="none"/>`);
-      }
-      c.d.add(`<path d="${A.catmull([[W * 0.5, hz - 20], [W * 0.47, hz + 120], [W * 0.53, hz + 260], [W * 0.5, H]])}" fill="none" stroke="${c.P.accent}" stroke-width="4" opacity="0.7"/>`);
-      c.d.add(birds(c, 3, W * 0.3, W * 0.7, H * 0.15, H * 0.3, c.P.ink));
-      return finishScene(c, weather, { vig: 0.5 });
-    },
-    northern_lights(seed, pal, time, weather) {
-      const c = A.sceneBase(seed, pal, 'night', weather, W, H);
-      c.d.add(A.starField(c.d, c.rng, W, H, 120, c.P.light, 1.8));
-      for (let i = 0; i < 3; i++) {
-        const y = c.rng.range(H * 0.1, H * 0.4), col = c.rng.pick([c.P.accent, c.P.light, c.P.mid]);
-        c.d.grad('aur' + i, [[0, col, 0], [0.5, col, 0.4], [1, col, 0]], { x1: 0, y1: y, x2: 0, y2: y + H * 0.5, gradientUnits: 'userSpaceOnUse' });
-        c.d.add(`<path d="${A.catmull([[0, y], [W * 0.25, y + c.rng.range(-40, 60)], [W * 0.5, y + c.rng.range(-60, 40)], [W * 0.75, y + c.rng.range(-30, 70)], [W, y + c.rng.range(-50, 50)]])} L ${W} ${A.fmt(y + H * 0.4)} ${A.catmull([[W, y + H * 0.34], [W * 0.75, y + H * 0.3], [W * 0.5, y + H * 0.42], [W * 0.25, y + H * 0.32], [0, y + H * 0.38]]).slice(1)} Z" fill="url(#${c.d.p}aur${i})" class="drift" style="animation-duration:${A.fmt(c.rng.range(8, 12))}s"/>`);
-      }
-      const hz = H * 0.78;
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz, W + 20, hz - c.rng.range(30, 80), 30, 5), hz, H, c.P.ink, 1));
-      c.d.add(treeLine(c, H * 0.98, 0, W, 6, c.P.ink, 100, 180));
-      return A.finish(c.d, W, H, { vig: 0.4 });
-    },
-    savanna_sunset(seed, pal, time, weather) {
-      const c = base(seed, pal, 'golden', weather), t = tints(c);
-      const hz = H * 0.68;
-      c.d.add(`<rect y="${A.fmt(hz)}" width="${W}" height="${A.fmt(H - hz)}" fill="${c.P.base}"/>`);
-      c.d.add(`<path d="${A.wavePath(c.rng, hz + 60, 8, W, H, 3)} L ${W} ${H} L 0 ${H} Z" fill="${A.mix(c.P.base, c.P.mid, 0.5)}"/>`);
-      for (let i = 0; i < 4; i++) c.d.add(`<path d="M ${A.fmt(c.rng.range(0, W))} ${A.fmt(hz + 20 + i * 30)} q ${A.fmt(c.rng.range(30, 70))} ${A.fmt(-c.rng.range(4, 10))} ${A.fmt(c.rng.range(70, 140))} 0" stroke="${A.mix(c.P.shadow, c.P.ink, i / 4)}" stroke-width="${A.fmt(3 + i)}" fill="none" opacity="0.8"/>`);
-      const tx = c.rng.range(W * 0.25, W * 0.75);
-      c.d.add(A.castShadow(`M ${A.fmt(tx - 40)} ${A.fmt(hz + 40)} L ${A.fmt(tx + 40)} ${A.fmt(hz + 40)} L ${A.fmt(tx + 110)} ${A.fmt(hz + 52)} L ${A.fmt(tx - 90)} ${A.fmt(hz + 52)} Z`, 70, 12, c.P.ink, 0.55));
-      c.d.add(`<rect x="${A.fmt(tx - 3)}" y="${A.fmt(hz - 70)}" width="6" height="${A.fmt(110)}" fill="${c.P.ink}"/><ellipse cx="${A.fmt(tx)}" cy="${A.fmt(hz - 78)}" rx="${A.fmt(c.rng.range(60, 90))}" ry="16" fill="${c.P.ink}"/><path d="M ${A.fmt(tx - 55)} ${A.fmt(hz - 84)} q 55 -22 110 0" stroke="${c.P.ink}" stroke-width="5" fill="none"/>`);
-      c.d.add(birds(c, c.rng.int(3, 6), 80, W - 80, H * 0.1, H * 0.25, c.P.ink));
-      return finishScene(c, weather, { vig: 0.45 });
-    },
-    cherry_blossom_hill(seed, pal, time, weather) {
-      const c = base(seed, pal, time, weather), t = tints(c);
-      const hz = H * 0.6;
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz - 40, W + 20, hz - 90, 40, 5), hz, H, A.mix(c.P.mid, c.P.light, 0.4), 1));
-      const tx = c.rng.range(W * 0.35, W * 0.65);
-      c.d.add(`<path d="M ${A.fmt(tx - 6)} ${A.fmt(hz)} L ${A.fmt(tx - 3)} ${A.fmt(hz - 150)} M ${A.fmt(tx - 3)} ${A.fmt(hz - 120)} q -50 -30 -90 -10 M ${A.fmt(tx - 3)} ${A.fmt(hz - 90)} q 50 -34 95 -16" stroke="${c.P.ink}" stroke-width="9" fill="none" stroke-linecap="round"/>`);
-      for (let i = 0; i < 40; i++) {
-        const a = c.rng.range(0, Math.PI * 2), r = c.rng.range(20, 130);
-        c.d.add(`<circle cx="${A.fmt(tx + Math.cos(a) * r)}" cy="${A.fmt(hz - 130 + Math.sin(a) * r * 0.6)}" r="${A.fmt(c.rng.range(4, 11))}" fill="${c.rng.pick([c.P.light, c.P.accent, '#ffffff'])}" opacity="${A.fmt(c.rng.range(0.7, 1))}"/>`);
-      }
-      const n = c.rng.int(40, 70);
-      for (let i = 0; i < n; i++) c.d.add(`<circle cx="${A.fmt(c.rng.range(0, W))}" cy="${A.fmt(c.rng.range(hz, H))}" r="${A.fmt(c.rng.range(2, 5))}" fill="${c.rng.pick([c.P.light, c.P.accent])}" opacity="${A.fmt(c.rng.range(0.5, 0.9))}" class="snow" style="animation-delay:${A.fmt(c.rng.range(0, 5))}s;animation-duration:${A.fmt(c.rng.range(6, 11))}s"/>`);
-      c.d.add(treeLine(c, H * 0.97, 0, W, 4, t.near, 120, 200));
-      return finishScene(c, weather);
-    },
-    neon_highway(seed, pal, time, weather) {
-      const c = A.sceneBase(seed, pal, 'night', weather || 'rain', W, H);
-      const hz = H * 0.55, vp = W / 2;
-      c.d.add(A.starField(c.d, c.rng, W, hz, 30, c.P.light, 1.2));
-      c.d.add(`<path d="M 0 ${H} L ${A.fmt(vp - 60)} ${A.fmt(hz)} L ${A.fmt(vp + 60)} ${A.fmt(hz)} L ${W} ${H} Z" fill="${c.P.shadow}"/>`);
-      c.d.add(`<path d="M ${A.fmt(vp)} ${H} L ${A.fmt(vp)} ${A.fmt(hz)}" stroke="${c.P.accent}" stroke-width="5" stroke-dasharray="26 30" opacity="0.9"/>`);
-      for (let i = 0; i < 2; i++) {
-        const off = i === 0 ? -1 : 1;
-        for (let s = 0; s < 7; s++) {
-          const t = s / 7, x = vp + off * (60 + (W / 2 - 60) * t), y = hz + (H - hz) * t * t;
-          c.d.add(`<rect x="${A.fmt(x - 3 * t - 3)}" y="${A.fmt(y)}" width="${A.fmt(6 + 8 * t)}" height="${A.fmt(4 + 5 * t)}" fill="${c.P.light}" opacity="${A.fmt(0.9 - t * 0.6)}"/>`);
-        }
-      }
-      for (let i = 0; i < 6; i++) {
-        const bx = c.rng.range(30, W - 30), bh = c.rng.range(120, 300);
-        c.d.add(`<rect x="${A.fmt(bx - 24)}" y="${A.fmt(hz - bh)}" width="48" height="${A.fmt(bh)}" fill="${c.P.ink}"/>`);
-        c.d.add(`<rect x="${A.fmt(bx - 24)}" y="${A.fmt(hz - bh)}" width="48" height="${A.fmt(bh)}" fill="none" stroke="${c.rng.pick([c.P.accent, c.P.light])}" stroke-width="3" opacity="0.9" class="tw" style="animation-delay:${A.fmt(c.rng.range(0, 5))}s"/>`);
-      }
-      A.weatherOverlay(c, weather || 'rain');
-      return A.finish(c.d, W, H, { vig: 0.5 });
-    },
-    ruined_castle(seed, pal, time, weather) {
-      const c = base(seed, pal, weather === 'clear' ? 'dusk' : time, weather), t = tints(c);
-      const hz = H * 0.72;
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz - 60, W + 20, hz - 20, 30, 5), hz, H, t.far, 1));
-      const cx = W * 0.5, bw = W * 0.3, bh = c.rng.range(220, 320);
-      c.d.add(`<rect x="${A.fmt(cx - bw / 2)}" y="${A.fmt(hz - bh)}" width="${A.fmt(bw)}" height="${A.fmt(bh)}" fill="${t.mid}"/>`);
-      c.d.add(`<path d="M ${A.fmt(cx - bw / 2)} ${A.fmt(hz - bh)} L ${A.fmt(cx - bw / 2)} ${A.fmt(hz - bh - 60)} L ${A.fmt(cx - bw / 2 + 40)} ${A.fmt(hz - bh - 20)} L ${A.fmt(cx - bw / 2 + 70)} ${A.fmt(hz - bh - 70)} L ${A.fmt(cx - bw / 2 + 110)} ${A.fmt(hz - bh - 30)} L ${A.fmt(cx - bw / 2 + 110)} ${A.fmt(hz - bh)} Z" fill="${t.mid}"/>`);
-      c.d.add(`<rect x="${A.fmt(cx + bw / 2 - 70)}" y="${A.fmt(hz - bh - 130)}" width="70" height="${A.fmt(bh + 130)}" fill="${t.near}"/>`);
-      c.d.add(`<path d="M ${A.fmt(cx + bw / 2 - 70)} ${A.fmt(hz - bh - 130)} L ${A.fmt(cx + bw / 2 - 35)} ${A.fmt(hz - bh - 175)} L ${A.fmt(cx + bw / 2)} ${A.fmt(hz - bh - 130)} Z" fill="${t.near}"/>`);
-      for (let i = 0; i < 5; i++) {
-        const wx = c.rng.range(cx - bw / 2 + 20, cx + bw / 2 - 30), wy = c.rng.range(hz - bh + 30, hz - 60);
-        c.d.add(`<path d="M ${A.fmt(wx)} ${A.fmt(wy)} L ${A.fmt(wx)} ${A.fmt(wy - 34)} L ${A.fmt(wx + 18)} ${A.fmt(wy - 34)} L ${A.fmt(wx + 18)} ${A.fmt(wy)} Z" fill="${c.P.ink}"/>`);
-        if (c.rng.chance(0.6)) c.d.add(`<rect x="${A.fmt(wx + 5)}" y="${A.fmt(wy - 26)}" width="8" height="12" fill="${c.P.accent}" opacity="0.9" class="tw"/>`);
-      }
-      c.d.add(`<rect y="${A.fmt(hz)}" width="${W}" height="${A.fmt(H - hz)}" fill="${c.P.shadow}"/>`);
-      c.d.add(A.layer(c.d, A.ridge(c.rng, -20, hz + 60, W + 20, hz + 20, 24, 4), hz + 70, H, c.P.ink, 1));
-      return finishScene(c, weather, { vig: 0.55 });
+  reg('thunderstorm', (r, p, d) => {
+    let s = '';
+    for (let i = 0; i < 6; i++) s += `<ellipse cx="${F(r.f() * 800)}" cy="${F(60 + r.f() * 120)}" rx="${F(200 + r.f() * 160)}" ry="${F(36 + r.f() * 26)}" fill="${p.sil}" opacity="0.75"/>`;
+    s += `<path d="M${F(300 + r.f() * 200)} 90 L ${F(350 + r.f() * 180)} ${F(240)} L ${F(320)} 240 L ${F(390 + r.f() * 180)} ${F(360)}" stroke="${p.accent}" stroke-width="6" fill="none" opacity="0.95"/>`;
+    s += A.hills(d, r, p, [{ y: 400, amp: 50, op: 0.7 }, { y: 450, amp: 26, op: 1 }]);
+    for (let i = 0; i < 6; i++) s += A.pine(60 + i * 140 + r.f() * 40, 460, 90, 150 + r.f() * 40, p.sil, 1);
+    return s;
+  });
+
+  reg('space', (r, p, d) => {
+    const px = 520 + r.f() * 80, py = 200 + r.f() * 60, pr = 70 + r.f() * 30;
+    let s = A.stars(d, r, p, 460, 110);
+    s += `<line x1="${F(120 + r.f() * 200)}" y1="${F(50 + r.f() * 60)}" x2="${F(220 + r.f() * 220)}" y2="${F(110 + r.f() * 60)}" stroke="#e9e4d4" stroke-width="1.4" opacity="0.5"/>`;
+    d.def(`<clipPath id="${d.p}pc"><circle cx="${F(px)}" cy="${F(py)}" r="${F(pr)}"/></clipPath>`);
+    s += `<circle cx="${F(px)}" cy="${F(py)}" r="${F(pr)}" fill="${p.stops[1]}"/>
+      <circle cx="${F(px - pr * 0.25)}" cy="${F(py - pr * 0.25)}" r="${F(pr)}" fill="${p.horizon}" opacity="0.3" clip-path="url(#${d.p}pc)"/>
+      <ellipse cx="${F(px)}" cy="${F(py)}" rx="${F(pr * 1.7)}" ry="${F(pr * 0.4)}" fill="none" stroke="${p.accent}" stroke-width="3" opacity="0.5" transform="rotate(-14 ${F(px)} ${F(py)})"/>`;
+    const ax = 180 + r.f() * 100, ay = 300 + r.f() * 60;
+    s += `<g stroke="${p.sil}" stroke-width="4" fill="${p.sil}" opacity="0.9"><circle cx="${F(ax)}" cy="${F(ay)}" r="11" fill="none"/>
+      <line x1="${F(ax)}" y1="${F(ay + 11)}" x2="${F(ax)}" y2="${F(ay + 38)}"/><line x1="${F(ax - 14)}" y1="${F(ay + 22)}" x2="${F(ax + 14)}" y2="${F(ay + 22)}"/>
+      <line x1="${F(ax)}" y1="${F(ay + 38)}" x2="${F(ax - 10)}" y2="${F(ay + 58)}"/><line x1="${F(ax)}" y1="${F(ay + 38)}" x2="${F(ax + 12)}" y2="${F(ay + 56)}"/></g>
+      <line x1="${F(ax - 60)}" y1="${F(ay + 80)}" x2="${F(ax - 20)}" y2="${F(ay + 66)}" stroke="${p.accent}" stroke-width="2" opacity="0.5"/>`;
+    return s;
+  });
+
+  reg('swamp', (r, p, d) => {
+    let s = `<rect x="0" y="360" width="800" height="140" fill="${p.stops[0]}" opacity="0.6"/>`;
+    for (let i = 0; i < 10; i++) s += `<ellipse cx="${F(r.f() * 800)}" cy="${F(380 + r.f() * 100)}" rx="${F(40 + r.f() * 60)}" ry="${F(5 + r.f() * 6)}" fill="${p.horizon}" opacity="0.25"/>`;
+    for (let i = 0; i < 8; i++) {
+      const x = 60 + i * 95 + r.f() * 30, h = 130 + r.f() * 120;
+      s += `<path d="M${F(x)} 380 L ${F(x + r.f() * 8 - 4)} ${F(380 - h)}" stroke="${p.sil}" stroke-width="${F(7 + r.f() * 5)}" fill="none"/>`;
+      s += `<path d="M${F(x)} ${F(380 - h * 0.7)} q ${F(30 + r.f() * 30)} ${F(-10 - r.f() * 14)} ${F(55 + r.f() * 30)} 0" stroke="${p.sil}" stroke-width="4" fill="none"/>`;
     }
-  };
+    const lx = 300 + r.f() * 200, ly = 250 + r.f() * 60;
+    s += `<circle cx="${F(lx)}" cy="${F(ly)}" r="7" fill="${p.accent}"/><circle cx="${F(lx)}" cy="${F(ly)}" r="40" fill="url(#${d.p}glow)" opacity="0.6"/>`;
+    return s + A.hills(d, r, p, [{ y: 430, amp: 20, op: 1 }]);
+  });
 
-  window.ART.scenes = Object.assign(window.ART.scenes || {}, scenes);
+  reg('sea_cliffs', (r, p, d) => {
+    let s = `<rect x="0" y="330" width="800" height="170" fill="url(#${d.p}sea)"/>`;
+    for (let i = 0; i < 3; i++) s += `<path d="M0 ${F(360 + i * 40)} q 100 -10 200 0 t 200 0 t 200 0 t 200 0" stroke="${p.accent}" stroke-width="1.5" fill="none" opacity="0.18"/>`;
+    const cx = 480 + r.f() * 100;
+    s += `<path d="M${F(cx - 160)} 340 L ${F(cx - 110)} 120 L ${F(cx + 20)} 90 L ${F(cx + 110)} 200 L ${F(cx + 170)} 340 Z" fill="${p.sil}"/>
+      <path d="M${F(cx + 20)} 90 L ${F(cx + 40)} 160 L ${F(cx + 100)} 195 L ${F(cx + 20)} 90 Z" fill="${p.horizon}" opacity="0.6"/>
+      <path d="M${F(cx + 30)} 336 q 26 20 52 0" stroke="${p.light}" stroke-width="3" fill="none" opacity="0.6"/>`;
+    s += A.hills(d, r, p, [{ y: 420, amp: 24, op: 1 }]);
+    return s;
+  });
+
+  reg('lighthouse', (r, p, d) => {
+    let s = `<rect x="0" y="400" width="800" height="100" fill="url(#${d.p}sea)"/>`;
+    s += `<path d="M520 430 Q 600 380 800 410 L 800 500 L 470 500 Q 500 460 520 430 Z" fill="${p.sil}"/>`;
+    const lx = 640, ly = 170;
+    s += `<g><path d="M${lx - 18} ${ly + 200} L ${lx + 18} ${ly + 200} L ${lx + 12} ${ly} L ${lx - 12} ${ly} Z" fill="${p.sil}"/>
+      <rect x="${lx - 12}" y="${ly + 60}" width="24" height="12" fill="${p.accent}" opacity="0.7"/>
+      <rect x="${lx - 11}" y="${ly + 120}" width="22" height="12" fill="${p.accent}" opacity="0.7"/>
+      <circle cx="${lx}" cy="${ly - 10}" r="10" fill="${p.accent}"/><circle cx="${lx}" cy="${ly - 10}" r="40" fill="url(#${d.p}glow)"/>
+      <path d="M${lx - 8} ${ly - 10} L 60 90 L 60 260 Z" fill="${p.accent}" opacity="0.12"/></g>`;
+    return s;
+  });
+
+  reg('canyon', (r, p, d) => {
+    let s = `<path d="M400 200 Q 380 330 410 500 L 370 500 Q 350 330 400 200 Z" fill="${p.horizon}" opacity="0.25"/>
+      <path d="M400 220 Q 386 340 404 470" stroke="${p.accent}" stroke-width="2" fill="none" opacity="0.35"/>
+      <path d="M0 0 L 260 0 Q 200 120 250 250 Q 300 380 190 500 L 0 500 Z" fill="${p.sil}" opacity="0.85"/>
+      <path d="M0 0 L 170 0 Q 130 140 170 300 Q 200 420 120 500 L 0 500 Z" fill="${p.sil}"/>
+      <path d="M800 0 L 540 0 Q 600 130 550 260 Q 500 390 620 500 L 800 500 Z" fill="${p.sil}" opacity="0.85"/>
+      <path d="M800 0 L 640 0 Q 670 150 630 310 Q 600 430 690 500 L 800 500 Z" fill="${p.sil}"/>`;
+    return s;
+  });
+
+  reg('northern_lights', (r, p, d) => {
+    let s = A.stars(d, r, p, 460, 90);
+    for (let i = 0; i < 3; i++) s += `<path d="M${F(-50 + i * 90)} ${F(140 + i * 30)} Q 250 ${F(40 + i * 40)} 480 ${F(120 + i * 20)} T 860 ${F(80 + i * 30)}" stroke="${p.accent}" stroke-width="${F(14 - i * 3)}" fill="none" opacity="0.12" filter="url(#${d.p}soft)"/>`;
+    s += A.hills(d, r, p, [{ y: 410, amp: 40, op: 0.7 }, { y: 455, amp: 26, op: 1 }]);
+    for (let i = 0; i < 12; i++) s += `<ellipse cx="${F(r.f() * 800)}" cy="${F(400 + r.f() * 80)}" rx="${F(8 + r.f() * 18)}" ry="${F(4 + r.f() * 6)}" fill="${p.sil}" opacity="0.7"/>`;
+    return s;
+  });
+
+  reg('savanna_sunset', (r, p, d) => {
+    let s = A.sun(d, p, 400, 310, 46);
+    s += `<path d="M0 360 Q 400 330 800 360 L 800 500 L 0 500 Z" fill="${p.sil}" opacity="0.8"/>`;
+    const tx = 300 + r.f() * 200;
+    s += `<g fill="${p.sil}"><rect x="${F(tx - 3)}" y="300" width="6" height="70"/><ellipse cx="${F(tx)}" cy="292" rx="${F(60 + r.f() * 20)}" ry="13"/><path d="M${F(tx - 55)} 286 q 55 -20 110 0" stroke="${p.sil}" stroke-width="5" fill="none"/></g>`;
+    for (let i = 0; i < 4; i++) s += `<path d="M${F(80 + i * 200 + r.f() * 60)} 400 q ${F(20 + r.f() * 20)} -12 ${F(50 + r.f() * 30)} 0" stroke="${p.sil}" stroke-width="3" fill="none" opacity="0.7"/>`;
+    return s + A.hills(d, r, p, [{ y: 440, amp: 18, op: 1 }]);
+  });
+
+  reg('cherry_blossom_hill', (r, p, d) => {
+    let s = A.hills(d, r, p, [{ y: 380, amp: 60, op: 0.6 }, { y: 440, amp: 30, op: 1 }]);
+    const tx = 380 + r.f() * 120;
+    s += `<path d="M${F(tx - 5)} 400 L ${F(tx)} 280 M ${F(tx)} 320 q -50 -26 -88 -8 M ${F(tx)} 300 q 48 -30 92 -14" stroke="${p.sil}" stroke-width="9" fill="none" stroke-linecap="round"/>`;
+    for (let i = 0; i < 46; i++) {
+      const a = r.f() * Math.PI * 2, rr = 20 + r.f() * 120;
+      s += `<circle cx="${F(tx + Math.cos(a) * rr)}" cy="${F(270 + Math.sin(a) * rr * 0.55)}" r="${F(4 + r.f() * 8)}" fill="${r.pick([p.light, p.accent, '#ffffff'])}" opacity="${F(0.7 + r.f() * 0.3)}"/>`;
+    }
+    for (let i = 0; i < 26; i++) s += `<circle cx="${F(r.f() * 800)}" cy="${F(390 + r.f() * 100)}" r="${F(2 + r.f() * 3)}" fill="${r.pick([p.light, p.accent])}" opacity="0.6"/>`;
+    return s;
+  });
+
+  reg('neon_highway', (r, p, d) => {
+    let s = A.stars(d, r, p, 220, 40);
+    s += `<path d="M0 500 L 340 260 L 460 260 L 800 500 Z" fill="${p.stops[0]}"/>
+      <path d="M400 500 L 400 260" stroke="${p.accent}" stroke-width="4" stroke-dasharray="24 26" opacity="0.8"/>`;
+    for (let i = 0; i < 6; i++) {
+      const t = (i + 1) / 7, x = 400 + (i % 2 ? 1 : -1) * (60 + 300 * t), y = 260 + 240 * t * t;
+      s += `<rect x="${F(x - 4 * t - 3)}" y="${F(y)}" width="${F(8 + 8 * t)}" height="${F(4 + 5 * t)}" fill="${p.accent}" opacity="${F(0.9 - t * 0.5)}"/>`;
+    }
+    for (let i = 0; i < 5; i++) {
+      const bx = 30 + i * 160 + r.f() * 40, bh = 100 + r.f() * 140;
+      s += `<rect x="${F(bx)}" y="${F(260 - bh)}" width="46" height="${F(bh)}" fill="${p.sil}"/>
+      <rect x="${F(bx)}" y="${F(260 - bh)}" width="46" height="${F(bh)}" fill="none" stroke="${r.pick([p.accent, p.light])}" stroke-width="3" opacity="0.8"/>`;
+    }
+    return s + `<rect x="0" y="470" width="800" height="30" fill="${p.sil}"/>`;
+  });
+
+  reg('ruined_castle', (r, p, d) => {
+    let s = A.hills(d, r, p, [{ y: 400, amp: 40, op: 0.5 }]);
+    const cx = 400, bw = 260, bh = 240;
+    s += `<rect x="${F(cx - bw / 2)}" y="${F(420 - bh)}" width="${F(bw)}" height="${F(bh)}" fill="${p.sil}"/>
+      <path d="M${F(cx - bw / 2)} ${F(420 - bh)} L ${F(cx - bw / 2)} ${F(420 - bh - 56)} L ${F(cx - bw / 2 + 42)} ${F(420 - bh - 20)} L ${F(cx - bw / 2 + 74)} ${F(420 - bh - 66)} L ${F(cx - bw / 2 + 112)} ${F(420 - bh - 26)} L ${F(cx - bw / 2 + 112)} ${F(420 - bh)} Z" fill="${p.sil}"/>
+      <rect x="${F(cx + bw / 2 - 70)}" y="${F(420 - bh - 120)}" width="70" height="${F(bh + 120)}" fill="${p.sil}"/>
+      <path d="M${F(cx + bw / 2 - 70)} ${F(420 - bh - 120)} L ${F(cx + bw / 2 - 35)} ${F(420 - bh - 162)} L ${F(cx + bw / 2)} ${F(420 - bh - 120)} Z" fill="${p.sil}"/>`;
+    for (let i = 0; i < 5; i++) {
+      const wx = cx - bw / 2 + 24 + r.f() * (bw - 60), wy = 420 - bh + 30 + r.f() * (bh - 70);
+      s += `<path d="M${F(wx)} ${F(wy)} L ${F(wx)} ${F(wy - 30)} L ${F(wx + 16)} ${F(wy - 30)} L ${F(wx + 16)} ${F(wy)} Z" fill="${p.stops[0]}"/>`;
+      if (r.f() > 0.4) s += `<rect x="${F(wx + 5)}" y="${F(wy - 22)}" width="7" height="11" fill="${p.accent}" opacity="0.85"/>`;
+    }
+    return s + A.hills(d, r, p, [{ y: 460, amp: 20, op: 1 }]);
+  });
 })();

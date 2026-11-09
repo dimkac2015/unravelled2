@@ -33,7 +33,9 @@ sample characters, compositions, activities, cats, with palette/seed pickers).
 
 The only secret is `MISTRAL_API_KEY` in `.env`, used on the server only.
 No Spotify Web API, no client id/secret, no OAuth, no image-generation APIs:
-all art is inline SVG + CSS drawn by JS in `public/art/`.
+all art is inline SVG drawn by JS in `public/art/`, in the demo's minimalist
+gradient-and-silhouette style: seeded per playlist, 24 scenes × time-of-day × weather,
+24 era icons × 8 backdrops, character portraits, 14 poster compositions, 25 activities, 5 cats.
 
 ## Structure
 
@@ -45,10 +47,10 @@ public/app.js           CONFIG, page flow, ball/thread/cats logic
 public/i18n.js          exact UI strings for en, ru, be, fr
 public/gallery.html     /gallery art review page
 public/art/lists.js     all id libraries (shared client + server validation)
-public/art/engine.js    seeded PRNG, 16 palettes, lighting, textures, generators
+public/art/engine.js    seeded PRNG, 16 palettes, gradient/silhouette scene kit
 public/art/scenes_a.js  13 scenes        public/art/scenes_b.js  11 scenes
-public/art/icons.js     24 era icons + 8 backdrops
-public/art/figures.js   parametric waist-up portrait builder
+public/art/icons.js     24 era icons + 8 backdrops (badge frame)
+public/art/figures.js   character portraits from the "look" slots
 public/art/posters.js   14 poster compositions + 20 elements
 public/art/activities.js 25 activity illustrations
 public/art/cats.js      the 5 dock cats
