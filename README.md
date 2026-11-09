@@ -18,34 +18,33 @@ It's a fully static site — open `index.html` in a browser, or serve the folder
 python3 -m http.server 8000
 ```
 
-## Spotify & Genius keys (optional)
+## How it works — no keys, no accounts
 
-The site runs entirely in your browser. To unravel **real** playlists, it needs
-Client Credentials from your own [Spotify app](https://developer.spotify.com/dashboard):
+Paste a Spotify playlist link and Unravelled does everything in your browser:
 
-1. Create an app in the Spotify dashboard (no redirect URIs needed).
-2. Open **"spotify & genius keys"** on the front page and paste the Client ID and Client Secret.
-3. Keys are stored only in your browser's `localStorage` and sent directly to Spotify.
+1. **Track list** — read from Spotify's public embed page (relayed through open
+   CORS proxies, since Spotify doesn't send CORS headers on it).
+2. **Mood** — up to six 30-second audio previews are decoded with the Web Audio
+   API and measured (energy, brightness, punchiness, rough tempo).
+3. **Cover colours** — the playlist's cover art is read via Spotify's oEmbed
+   endpoint and its palette analyzed on a canvas.
+4. **Lyric quote** — pulled from the free lyrics.ovh API for the song that best
+   matches the playlist's average mood.
 
-Optionally add a Genius API token to attach a "full lyrics" link to the quoted song.
+These three signals (audio → name keywords → cover colours) are combined into one
+of twelve mood profiles, each with its own scenery, colour palette, era, character
+and movie. If some sources are unreachable, the site degrades gracefully to the
+next signal. No accounts, no API keys, nothing stored.
 
-**No keys? No problem** — use **"try a demo playlist"** on the front page to see the full
-experience with three built-in sample playlists (dark & heavy, sunny & nostalgic, lush & slow).
-
-## How the mood analysis works
-
-For each track, Unravelled reads Spotify's audio features (energy, valence, tempo,
-acousticness, instrumentalness, danceability), averages them across the playlist, and maps
-the result to one of twelve mood profiles — each with its own scenery, color palette,
-era, character and movie. If Spotify's audio-features endpoint is unavailable for your app,
-rough features are estimated from track durations and title keywords instead.
+**No link handy?** Use **"try a demo playlist"** on the front page — three built-in
+sample playlists (dark & heavy, sunny & nostalgic, lush & slow) with the full experience.
 
 ## Structure
 
 ```
 index.html        — page shell and yarn ball
 css/styles.css    — deep-green theme, responsive layout
-js/app.js         — Spotify API, mood analysis, page flow
+js/app.js         — keyless pipeline (embed page, previews, lyrics, colours), mood analysis, page flow
 js/scenes.js       — 11 minimalist SVG sceneries
 js/portraits.js    — "This Is The Police"-style portrait generator
 js/cats.js         — the finale cats & thread pile

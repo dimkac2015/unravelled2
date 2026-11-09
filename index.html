@@ -55,25 +55,7 @@
     </div>
 
     <div class="home-foot">
-      <button class="linklike" id="settings-toggle">spotify &amp; genius keys</button>
       <button class="linklike" id="demo-toggle">try a demo playlist</button>
-    </div>
-
-    <div class="settings" id="settings-panel" hidden>
-      <p class="settings-note">
-        Unravelled runs entirely in your browser. To read real Spotify playlists,
-        paste a Client ID and Client Secret from your own
-        <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">Spotify app</a>.
-        Optionally add a Genius API token to pull a real lyric quote.
-        Keys are stored only in your browser (localStorage).
-      </p>
-      <div class="settings-row">
-        <label>Spotify Client ID<input id="sp-client-id" type="text" autocomplete="off"></label>
-        <label>Spotify Client Secret<input id="sp-client-secret" type="password" autocomplete="off"></label>
-        <label>Genius token (optional)<input id="genius-token" type="password" autocomplete="off"></label>
-      </div>
-      <button id="settings-save" class="small-btn">save keys</button>
-      <span id="settings-saved" class="saved-note" hidden>saved ✓</span>
     </div>
 
     <div class="demo-list" id="demo-list" hidden>
