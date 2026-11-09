@@ -1,55 +1,59 @@
 # Unravelled
 
-Unravelled analyzes a Spotify playlist and unspools it into a small visual story:
-
-1. **The Scenery** — a minimalist SVG landscape matched to the playlist's mood, with a quote from the song that best represents it.
-2. **The Era** — a period of history (and its feel) that fits the sound, with an icon.
-3. **The Character** — a movie/cartoon character who would own this playlist, drawn in the flat, hard-lit style of *This Is The Police*.
-4. **The Movie** — an existing film that could carry this playlist as its soundtrack, in the same art style.
-5. **The Finale** — the yarn ball is fully unravelled into a pile of thread, watched by cats who then lose interest and wander off.
-
-A ball of yarn sits in the corner of every page and gets smaller as you progress, leaving a trailing thread behind.
+Paste a public Spotify playlist link and Unravelled unspools it into a six-page
+illustrated story: Scenery → Era → Character → Movie → Overall impression → Finale.
+A ball of yarn shrinks page by page while a thread runs through five cats in the dock.
 
 ## Running
 
-It's a fully static site — open `index.html` in a browser, or serve the folder:
-
 ```bash
-python3 -m http.server 8000
+npm install
+cp .env.example .env   # put your MISTRAL_API_KEY there (server-side only)
+npm start              # http://localhost:3000
 ```
 
-## Spotify & Genius keys (optional)
+Art quality gate: open `/gallery` (all scenes × 3 seeds, icons × backdrops,
+sample characters, compositions, activities, cats, with palette/seed pickers).
 
-The site runs entirely in your browser. To unravel **real** playlists, it needs
-Client Credentials from your own [Spotify app](https://developer.spotify.com/dashboard):
+## How it works — no Spotify keys
 
-1. Create an app in the Spotify dashboard (no redirect URIs needed).
-2. Open **"spotify & genius keys"** on the front page and paste the Client ID and Client Secret.
-3. Keys are stored only in your browser's `localStorage` and sent directly to Spotify.
+1. **Track list** — `POST /api/playlist` fetches `https://open.spotify.com/embed/playlist/{id}`
+   with a normal browser User-Agent, parses the JSON inside `<script id="__NEXT_DATA__">`
+   and recursively collects every object with a track title + artist. Accepts
+   `open.spotify.com/playlist/{id}` (with or without `?si=…`) and `spotify:playlist:{id}`.
+   If the fetch fails or yields fewer than 5 tracks, the front page shows a manual
+   track-paste textarea and the flow continues from that list (stable id = hash of text).
+2. **Mood** — `POST /api/analyze` sends the tracks to the Mistral API
+   (`mistral-large-latest`, JSON mode, temperature 0.3) and validates every id field
+   server-side against the libraries in `public/art/lists.js` (invalid ids are replaced
+   with the closest valid one — never a crash). Human-readable text is written in the
+   chosen language (en/ru/be/fr); song titles, artists and the lyric quote stay original.
+3. **Quote** — `GET /api/quote?artist=&title=` calls the free `api.lyrics.ovh` API;
+   one line, max 12 words, tried over 3 candidates. Never invented.
 
-Optionally add a Genius API token to attach a "full lyrics" link to the quoted song.
-
-**No keys? No problem** — use **"try a demo playlist"** on the front page to see the full
-experience with three built-in sample playlists (dark & heavy, sunny & nostalgic, lush & slow).
-
-## How the mood analysis works
-
-For each track, Unravelled reads Spotify's audio features (energy, valence, tempo,
-acousticness, instrumentalness, danceability), averages them across the playlist, and maps
-the result to one of twelve mood profiles — each with its own scenery, color palette,
-era, character and movie. If Spotify's audio-features endpoint is unavailable for your app,
-rough features are estimated from track durations and title keywords instead.
+The only secret is `MISTRAL_API_KEY` in `.env`, used on the server only.
+No Spotify Web API, no client id/secret, no OAuth, no image-generation APIs:
+all art is inline SVG drawn by JS in `public/art/`, in the demo's minimalist
+gradient-and-silhouette style: seeded per playlist, 24 scenes × time-of-day × weather,
+24 era icons × 8 backdrops, character portraits, 14 poster compositions, 25 activities, 5 cats.
 
 ## Structure
 
 ```
-index.html        — page shell and yarn ball
-css/styles.css    — deep-green theme, responsive layout
-js/app.js         — Spotify API, mood analysis, page flow
-js/scenes.js       — 11 minimalist SVG sceneries
-js/portraits.js    — "This Is The Police"-style portrait generator
-js/cats.js         — the finale cats & thread pile
-js/demo-data.js    — demo playlists with embedded audio features
+server.js               Express backend: /api/playlist, /api/analyze, /api/quote, static
+public/index.html       app shell (header / stage / controls / dock)
+public/style.css        grid layout, dock, responsive rules
+public/app.js           CONFIG, page flow, ball/thread/cats logic
+public/i18n.js          exact UI strings for en, ru, be, fr
+public/gallery.html     /gallery art review page
+public/art/lists.js     all id libraries (shared client + server validation)
+public/art/engine.js    seeded PRNG, 16 palettes, gradient/silhouette scene kit
+public/art/scenes_a.js  13 scenes        public/art/scenes_b.js  11 scenes
+public/art/icons.js     24 era icons + 8 backdrops (badge frame)
+public/art/figures.js   character portraits from the "look" slots
+public/art/posters.js   14 poster compositions + 20 elements
+public/art/activities.js 25 activity illustrations
+public/art/cats.js      the 5 dock cats
 ```
 
-Not affiliated with Spotify or Genius. All artwork is original SVG generated in the browser.
+Not affiliated with Spotify. All artwork is original SVG generated in the browser.
