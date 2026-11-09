@@ -925,5 +925,6 @@
     btn.addEventListener("click", () => runDemo(btn.dataset.demo));
   });
 
+  window.UNRAVELLED_LOADED = 3;
   show("page-home");
 })();

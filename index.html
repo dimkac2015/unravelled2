@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/styles.css?v=3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23e8dcC8'/%3E%3Cpath d='M6 16c4-6 8 4 12-2 3-4 6 2 8-1' stroke='%232e5d43' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 </head>
 <body>
@@ -100,10 +100,21 @@
   <p>Unravelled — a playlist, unspooled. Not affiliated with Spotify.</p>
 </footer>
 
-<script src="js/demo-data.js"></script>
-<script src="js/scenes.js"></script>
-<script src="js/portraits.js"></script>
-<script src="js/cats.js"></script>
-<script src="js/app.js"></script>
+<script>window.UNRAVELLED_VERSION = 3;</script>
+<script src="js/demo-data.js?v=3"></script>
+<script src="js/scenes.js?v=3"></script>
+<script src="js/portraits.js?v=3"></script>
+<script src="js/cats.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+<script>
+// Self-heal: the current app.js sets UNRAVELLED_LOADED when it runs. If a
+// stale cached app.js was served instead, it won't — so reload once with a
+// cache-buster to pull the current code.
+window.addEventListener("DOMContentLoaded", function () {
+  if (window.UNRAVELLED_LOADED !== 3 && !/[?&]r=/.test(location.search)) {
+    location.replace(location.pathname + "?r=" + Date.now());
+  }
+});
+</script>
 </body>
 </html>
