@@ -1,0 +1,13 @@
+{
+  "name": "unravelled",
+  "version": "1.0.0",
+  "description": "Paste a Spotify playlist link, get a short illustrated story in pages. No Spotify keys.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "license": "MIT"
+}

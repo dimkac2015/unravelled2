@@ -1,54 +1,57 @@
 # Unravelled
 
-Unravelled analyzes a Spotify playlist and unspools it into a small visual story:
-
-1. **The Scenery** — a minimalist SVG landscape matched to the playlist's mood, with a quote from the song that best represents it.
-2. **The Era** — a period of history (and its feel) that fits the sound, with an icon.
-3. **The Character** — a movie/cartoon character who would own this playlist, drawn in the flat, hard-lit style of *This Is The Police*.
-4. **The Movie** — an existing film that could carry this playlist as its soundtrack, in the same art style.
-5. **The Finale** — the yarn ball is fully unravelled into a pile of thread, watched by cats who then lose interest and wander off.
-
-A ball of yarn sits in the corner of every page and gets smaller as you progress, leaving a trailing thread behind.
+Paste a public Spotify playlist link and Unravelled unspools it into a six-page
+illustrated story: Scenery → Era → Character → Movie → Overall impression → Finale.
+A ball of yarn shrinks page by page while a thread runs through five cats in the dock.
 
 ## Running
 
-It's a fully static site — open `index.html` in a browser, or serve the folder:
-
 ```bash
-python3 -m http.server 8000
+npm install
+cp .env.example .env   # put your MISTRAL_API_KEY there (server-side only)
+npm start              # http://localhost:3000
 ```
 
-## How it works — no keys, no accounts
+Art quality gate: open `/gallery` (all scenes × 3 seeds, icons × backdrops,
+sample characters, compositions, activities, cats, with palette/seed pickers).
 
-Paste a Spotify playlist link and Unravelled does everything in your browser:
+## How it works — no Spotify keys
 
-1. **Track list** — read from Spotify's public embed page (relayed through open
-   CORS proxies, since Spotify doesn't send CORS headers on it).
-2. **Mood** — up to six 30-second audio previews are decoded with the Web Audio
-   API and measured (energy, brightness, punchiness, rough tempo).
-3. **Cover colours** — the playlist's cover art is read via Spotify's oEmbed
-   endpoint and its palette analyzed on a canvas.
-4. **Lyric quote** — pulled from the free lyrics.ovh API for the song that best
-   matches the playlist's average mood.
+1. **Track list** — `POST /api/playlist` fetches `https://open.spotify.com/embed/playlist/{id}`
+   with a normal browser User-Agent, parses the JSON inside `<script id="__NEXT_DATA__">`
+   and recursively collects every object with a track title + artist. Accepts
+   `open.spotify.com/playlist/{id}` (with or without `?si=…`) and `spotify:playlist:{id}`.
+   If the fetch fails or yields fewer than 5 tracks, the front page shows a manual
+   track-paste textarea and the flow continues from that list (stable id = hash of text).
+2. **Mood** — `POST /api/analyze` sends the tracks to the Mistral API
+   (`mistral-large-latest`, JSON mode, temperature 0.3) and validates every id field
+   server-side against the libraries in `public/art/lists.js` (invalid ids are replaced
+   with the closest valid one — never a crash). Human-readable text is written in the
+   chosen language (en/ru/be/fr); song titles, artists and the lyric quote stay original.
+3. **Quote** — `GET /api/quote?artist=&title=` calls the free `api.lyrics.ovh` API;
+   one line, max 12 words, tried over 3 candidates. Never invented.
 
-These three signals (audio → name keywords → cover colours) are combined into one
-of twelve mood profiles, each with its own scenery, colour palette, era, character
-and movie. If some sources are unreachable, the site degrades gracefully to the
-next signal. No accounts, no API keys, nothing stored.
-
-**No link handy?** Use **"try a demo playlist"** on the front page — three built-in
-sample playlists (dark & heavy, sunny & nostalgic, lush & slow) with the full experience.
+The only secret is `MISTRAL_API_KEY` in `.env`, used on the server only.
+No Spotify Web API, no client id/secret, no OAuth, no image-generation APIs:
+all art is inline SVG + CSS drawn by JS in `public/art/`.
 
 ## Structure
 
 ```
-index.html        — page shell and yarn ball
-css/styles.css    — deep-green theme, responsive layout
-js/app.js         — keyless pipeline (embed page, previews, lyrics, colours), mood analysis, page flow
-js/scenes.js       — 11 minimalist SVG sceneries
-js/portraits.js    — "This Is The Police"-style portrait generator
-js/cats.js         — the finale cats & thread pile
-js/demo-data.js    — demo playlists with embedded audio features
+server.js               Express backend: /api/playlist, /api/analyze, /api/quote, static
+public/index.html       app shell (header / stage / controls / dock)
+public/style.css        grid layout, dock, responsive rules
+public/app.js           CONFIG, page flow, ball/thread/cats logic
+public/i18n.js          exact UI strings for en, ru, be, fr
+public/gallery.html     /gallery art review page
+public/art/lists.js     all id libraries (shared client + server validation)
+public/art/engine.js    seeded PRNG, 16 palettes, lighting, textures, generators
+public/art/scenes_a.js  13 scenes        public/art/scenes_b.js  11 scenes
+public/art/icons.js     24 era icons + 8 backdrops
+public/art/figures.js   parametric waist-up portrait builder
+public/art/posters.js   14 poster compositions + 20 elements
+public/art/activities.js 25 activity illustrations
+public/art/cats.js      the 5 dock cats
 ```
 
-Not affiliated with Spotify or Genius. All artwork is original SVG generated in the browser.
+Not affiliated with Spotify. All artwork is original SVG generated in the browser.

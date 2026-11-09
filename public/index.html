@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unravelled</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="header">
+    <div id="wordmark">Unravelled</div>
+    <div id="langWrap">
+      <button id="langBtn" aria-haspopup="true" aria-expanded="false">EN</button>
+      <div id="langMenu" hidden></div>
+    </div>
+  </header>
+
+  <main id="stage">
+    <div id="frontPage" class="page active">
+      <form id="linkForm">
+        <input id="linkInput" type="text" autocomplete="off" spellcheck="false">
+        <button id="unravelBtn" type="submit" class="primary"></button>
+      </form>
+      <div id="frontError" class="notice" hidden>
+        <span id="frontErrorText"></span>
+        <button id="retryBtn" type="button"></button>
+      </div>
+      <div id="manualWrap" hidden>
+        <p id="manualText"></p>
+        <textarea id="manualInput" rows="6"></textarea>
+        <button id="manualBtn" type="button" class="primary"></button>
+      </div>
+      <div id="frontBallSlot"></div>
+      <div id="loadingLine" class="notice" hidden></div>
+    </div>
+
+    <section id="page1" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><blockquote class="quote"></blockquote><div class="quote-attr"></div></div></section>
+    <section id="page2" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><p class="era-season"></p><p class="era-feel"></p></div></section>
+    <section id="page3" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><p class="src"></p><p class="why"></p></div></section>
+    <section id="page4" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><p class="src"></p><p class="why"></p></div></section>
+    <section id="page5" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><p class="why"></p></div></section>
+    <section id="page6" class="page story"><div class="art"></div><div class="panel"><h2 class="art-title"></h2><button id="anotherBtn" type="button" class="primary"></button></div></section>
+  </main>
+
+  <nav id="controls">
+    <button id="backBtn" type="button"></button>
+    <div id="dots"></div>
+    <button id="nextBtn" type="button"></button>
+  </nav>
+
+  <div id="dock">
+    <div id="ballSlot"></div>
+    <svg id="threadSvg" preserveAspectRatio="none"></svg>
+    <div id="catRow"></div>
+  </div>
+</div>
+
+<script src="art/lists.js"></script>
+<script src="art/engine.js"></script>
+<script src="art/scenes_a.js"></script>
+<script src="art/scenes_b.js"></script>
+<script src="art/icons.js"></script>
+<script src="art/figures.js"></script>
+<script src="art/posters.js"></script>
+<script src="art/activities.js"></script>
+<script src="art/cats.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
